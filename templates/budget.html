@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>My Budget</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="row mt-4">
+			<div class="col-sm-12">
+				<h1 class="text-center">My Budget</h1>
+			</div>
+		</div>
+
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for m in messages %}
+					<div class="row mt-4">
+						<div class="col-sm-12">
+							<div class="alert alert-primary" role="alert">
+								{{ m }}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		<table>
+			<tr>
+				<td>Category</td>
+				<td>Status</td>
+				<td>Delete?</td>
+			</tr>
+			<tr>
+				<td>Food</td>
+				<td>50/100</td>
+				<td>Delete</td>
+			</tr>
+			<tr>
+				<td>Uncategorized</td>
+				<td>50/100</td>
+				<td>Delete</td>
+			</tr>
+		</table>
+
+		<strong>Add Category:</strong><br />
+		Category: <input type="text" id="addCat_category" /> <br />
+		Budget: <input type="text" id="addCat_budget"><br />
+		<input type="submit" name="submit" value="Submit" id="addCat_submit" />
+
+
+		<div class="row mt-4">
+			<div class="col-sm-12">
+				<h2 class="text-center">My Purchases</h2>
+			</div>
+		</div>
+
+		<table>
+			<tr>
+				<td>Date</td>
+				<td>Purpose</td>
+				<td>Category</td>
+				<td>Amount</td>
+			</tr>
+			<tr>
+				<td>2017/11/19</td>
+				<td>Dinner</td>
+				<td>Food</td>
+				<td>9.99</td>
+			</tr>
+			<tr>
+				<td>2017/11/19</td>
+				<td>Breakfast</td>
+				<td>Food</td>
+				<td>9.99</td>
+		</tr>
+		</table>
+
+		<strong>Add Purchase:</strong><br />
+		Date: <input type="text" id="addPur_date" /> <br />
+		Purpose: <input type="text" id="addPur_purpose"><br />
+		Category: <select id="addPur_category">
+			<option value="addPur_Food">Food</option>
+		</select><br />
+		<input type="submit" name="submit" value="Submit" id="addPur_submit" />
+
+
+		<footer class="row mt-5">
+			<div class="col-sm-12">
+				<p class="text-center">
+					Jordan Grogan<br />
+					<a href="mailto:jordangrogan@pitt.edu">jordangrogan@pitt.edu</a><br />
+					Tues/Thurs 6pm
+				</p>
+			</div>
+		</footer>
+
+	</div>
+
+</body>
+</html>
