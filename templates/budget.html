@@ -6,6 +6,7 @@
 	<title>My Budget</title>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
 
@@ -31,22 +32,12 @@
 			{% endif %}
 		{% endwith %}
 
-		<table>
-			<tr>
+		<table id="categories">
+			<thead>
 				<td>Category</td>
 				<td>Status</td>
 				<td>Delete?</td>
-			</tr>
-			<tr>
-				<td>Food</td>
-				<td>50/100</td>
-				<td>Delete</td>
-			</tr>
-			<tr>
-				<td>Uncategorized</td>
-				<td>50/100</td>
-				<td>Delete</td>
-			</tr>
+			</thead>
 		</table>
 
 		<strong>Add Category:</strong><br />
@@ -61,33 +52,20 @@
 			</div>
 		</div>
 
-		<table>
+		<table id="purchases">
 			<tr>
 				<td>Date</td>
 				<td>Purpose</td>
 				<td>Category</td>
 				<td>Amount</td>
 			</tr>
-			<tr>
-				<td>2017/11/19</td>
-				<td>Dinner</td>
-				<td>Food</td>
-				<td>9.99</td>
-			</tr>
-			<tr>
-				<td>2017/11/19</td>
-				<td>Breakfast</td>
-				<td>Food</td>
-				<td>9.99</td>
-		</tr>
 		</table>
 
 		<strong>Add Purchase:</strong><br />
 		Date: <input type="text" id="addPur_date" /> <br />
 		Purpose: <input type="text" id="addPur_purpose"><br />
-		Category: <select id="addPur_category">
-			<option value="addPur_Food">Food</option>
-		</select><br />
+		Category: <select id="addPur_category"></select><br />
+		Amount: <input type="text" id="addPur_amount"><br />
 		<input type="submit" name="submit" value="Submit" id="addPur_submit" />
 
 
