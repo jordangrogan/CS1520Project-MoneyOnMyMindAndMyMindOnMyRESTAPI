@@ -1,26 +1,6 @@
-var timeoutID;
-var timeout = 1000;
-var room_id = getQueryVariable("room");
-console.log("Room ID: " + room_id);
-
 function setup() {
 	/* Press the submit button to submit chat message */
 	document.getElementById("submit").addEventListener("click", makePost, true);
-
-	/* Press enter while in the text box to submit chat message */
-	/* https://stackoverflow.com/questions/14542062/eventlistener-enter-key */
-	document.getElementById("message").addEventListener("keypress", function (e) {
-	  var key = e.which || e.keyCode;
-	  if (key === 13) { // 13 is enter
-	  	makePost();
-	  }
-	});
-
-	document.getElementById("message").focus(); // Set focus to the message's textbox
-
-	adjustScroll(); // Adjust the messages window to be scrolled to the bottom
-
-	timeoutID = window.setTimeout(poller, timeout);
 }
 
 function makePost() {
@@ -104,26 +84,6 @@ function addMessage(username, message) {
 	messageCell  = newRow.insertCell();
 	messageText  = document.createTextNode(message);
 	messageCell.appendChild(messageText);
-}
-
-/* 	Keep the messages container div scrolled to the bottom when new messages are available
- 		https://stackoverflow.com/questions/270612/scroll-to-bottom-of-div */
-function adjustScroll() {
-	var messagesContainerDiv = document.getElementById("messagesContainer");
-	messagesContainerDiv.scrollTop = messagesContainerDiv.scrollHeight;
-}
-
-/* 	Function to get URL query arguements, from:
-		https://css-tricks.com/snippets/javascript/get-url-variables/ */
-function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
 }
 
 window.addEventListener("load", setup, true);

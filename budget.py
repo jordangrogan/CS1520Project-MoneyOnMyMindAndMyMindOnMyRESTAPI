@@ -8,13 +8,14 @@
 from flask import Flask, request, session, url_for, redirect, render_template, flash
 from datetime import datetime
 from flask_restful import Api
-#from resources import CategoryResource, PurchaseResource
+from resources import CategoryResource, CategoryListResource, PurchaseListResource
 
 app = Flask(__name__)
 
-#api = Api(app, prefix="/api")
-#api.add_resource(CategoryResource, '/cats/', endpoint='cats')
-#api.add_resource(PurchaseResource, '/purchases/', endpoint='purchases')
+api = Api(app, prefix="/api")
+api.add_resource(CategoryListResource, '/cats/', endpoint='cats')
+api.add_resource(CategoryResource, '/cats/<int:id>', endpoint='cat')
+api.add_resource(PurchaseListResource, '/purchases/', endpoint='purchases')
 
 # by default, direct to login
 @app.route("/", methods=['GET', 'POST'])
