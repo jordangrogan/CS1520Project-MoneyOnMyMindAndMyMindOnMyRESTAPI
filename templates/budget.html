@@ -32,12 +32,16 @@
 			{% endif %}
 		{% endwith %}
 
-		<table id="categories">
+		<table class="table table-striped">
 			<thead>
-				<td>Category</td>
-				<td>Status</td>
-				<td>Delete?</td>
+    		<tr>
+					<th scope="col">Category</th>
+					<th scope="col">Status</th>
+					<th scope="col">Delete?</th>
+				</tr>
 			</thead>
+			<tbody id="categories">
+			</tbody>
 		</table>
 
 		<strong>Add Category:</strong><br />
@@ -52,17 +56,21 @@
 			</div>
 		</div>
 
-		<table id="purchases">
-			<tr>
-				<td>Date</td>
-				<td>Purpose</td>
-				<td>Category</td>
-				<td>Amount</td>
-			</tr>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Date</th>
+					<th scope="col">Purpose</th>
+					<th scope="col">Category</th>
+					<th scope="col">Amount</th>
+				</tr>
+			</thead>
+			<tbody id="purchases">
+			</tbody>
 		</table>
 
 		<strong>Add Purchase:</strong><br />
-		Date: <input type="text" id="addPur_date" /> <br />
+		Date: <input type="date" id="addPur_date" /> <br />
 		Purpose: <input type="text" id="addPur_purpose"><br />
 		Category: <select id="addPur_category"></select><br />
 		Amount: <input type="text" id="addPur_amount"><br />

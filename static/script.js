@@ -1,5 +1,5 @@
 function setup() {
-	/* Press the submit button to submit chat message */
+	/* Press the submit button to submit category or purchase */
 	document.getElementById("addCat_submit").addEventListener("click", postCategory, true);
 	document.getElementById("addPur_submit").addEventListener("click", postPurchase, true);
 	getCategories();
@@ -31,8 +31,8 @@ function handleGetCategories(httpRequest) {
 
 			// Delete all the rows in the table
 			var tableRef = document.getElementById("categories");
-			while (tableRef.rows.length > 1) {
-				tableRef.deleteRow(1);
+			while (tableRef.rows.length > 0) {
+				tableRef.deleteRow(0);
 			}
 
 			// Delete all the options from the select category box
@@ -167,8 +167,8 @@ function handleGetPurchases(httpRequest) {
 
 			// Delete all the rows in the table
 			var tableRef = document.getElementById("purchases");
-			while (tableRef.rows.length > 1) {
-				tableRef.deleteRow(1);
+			while (tableRef.rows.length > 0) {
+				tableRef.deleteRow(0);
 			}
 
 			for (var i = 0; i < rows.length; i++) { // add all the rows from the response
