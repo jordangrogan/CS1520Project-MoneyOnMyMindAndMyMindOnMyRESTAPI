@@ -37,9 +37,9 @@ function handleGetCategories(httpRequest) {
 
 			// Delete all the options from the select category box
 			var selectRef = document.getElementById("addPur_category");
-			var len = selectRef.options.length;
+			var len = selectRef.length;
 			for (i = 0; i < len; i++) {
-			  selectRef.options[i] = null;
+			  selectRef.remove(0);
 			}
 
 			for (var i = 0; i < rows.length; i++) { // add all the rows from the response
