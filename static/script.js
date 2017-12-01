@@ -81,9 +81,7 @@ function handleGetPurchasesByMonth(httpRequest) {
 		if (httpRequest.status === 200) {
 			currentPurchases = JSON.parse(httpRequest.responseText);
 
-			console.log(categories.length);
-			// Anytime we get purchases, we want to update category statuses
-
+			// Update category statuses
 			categories.map(setCategoryStatus);
 
 		}
