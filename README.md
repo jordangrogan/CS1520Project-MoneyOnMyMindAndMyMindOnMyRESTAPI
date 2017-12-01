@@ -17,11 +17,11 @@ Then, run the app:
 `flask run`  
 Lastly, go to [http://localhost:5000](http://localhost:5000) in Chrome (the date field works best in Chrome).
 
-  
+
 ### Screenshot
-<img src=""/screenshot.png?raw=true" height="500">
+![Screenshot](/screenshot.png?raw=true)
 
-
+  
 ### curl Commands
 GET Categories  
 `curl -i http://localhost:5000/api/cats/`
