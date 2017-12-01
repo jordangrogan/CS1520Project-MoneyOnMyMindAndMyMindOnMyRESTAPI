@@ -1,9 +1,17 @@
+var purchases = [];
+var currentPurchases = [];
+var categories = [];
+var currentDate = new Date();
+
 function setup() {
 	/* Press the submit button to submit category or purchase */
 	document.getElementById("addCat_submit").addEventListener("click", postCategory, true);
 	document.getElementById("addPur_submit").addEventListener("click", postPurchase, true);
 	getCategories();
 	getPurchases();
+
+	months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+	document.getElementById("currentMonth").innerHTML = months[currentDate.getMonth()] + " " + currentDate.getFullYear();
 }
 
 function getCategories() {
@@ -27,7 +35,7 @@ function handleGetCategories(httpRequest) {
 
 		if (httpRequest.status === 200) {
 
-			var rows = JSON.parse(httpRequest.responseText); // Parse the response of the json object we got back
+			categories = JSON.parse(httpRequest.responseText); // Parse the response of the json object we got back
 
 			// Delete all the rows in the table
 			var tableRef = document.getElementById("categories");
@@ -42,13 +50,56 @@ function handleGetCategories(httpRequest) {
 			  selectRef.remove(0);
 			}
 
-			for (var i = 0; i < rows.length; i++) { // add all the rows from the response
-				addCategory(i, rows[i]["cat"], rows[i]["status"], rows[i]["budget"]);
+			// Add all the categories to the table
+			categories.map(addCategory);
+
+			// Get all the purchases from the current month to calculate the statuses
+			var httpRequest = new XMLHttpRequest();
+
+			if (!httpRequest) {
+				alert('Giving up :( Cannot create an XMLHTTP instance');
+				return false;
 			}
+
+			httpRequest.onreadystatechange = function() { handleGetPurchasesByMonth(httpRequest) }; // Listener on http request to listen for changes to the state
+			httpRequest.open("GET", "/api/purchases/?month=" + currentDate.getFullYear() + (currentDate.getMonth()+1));
+			console.log("GET Purchases By Month Requested: /api/purchases/?month=" + currentDate.getFullYear() + (currentDate.getMonth()+1));
+			httpRequest.send();
+
 		} else {
 			alert("There was a problem with the get request.  you'll need to refresh the page to recieve updates again!");
 		}
 	}
+}
+
+function handleGetPurchasesByMonth(httpRequest) {
+
+	if (httpRequest.readyState === XMLHttpRequest.DONE) {
+		console.log("GET Purchases By Month Response:");
+		console.log(httpRequest.responseText);
+
+		if (httpRequest.status === 200) {
+			currentPurchases = JSON.parse(httpRequest.responseText);
+
+			console.log(categories.length);
+			// Anytime we get purchases, we want to update category statuses
+
+			categories.map(setCategoryStatus);
+
+		}
+
+	}
+
+}
+
+function setCategoryStatus(catItem, id) {
+	var status = catItem.budget - currentPurchases.filter(purchase => purchase.cat === catItem.cat).reduce(sumPurchases, 0);
+	console.log("status:" + status);
+	document.getElementById("categories").rows[id].cells[1].innerText = "" + status;
+}
+
+function sumPurchases(accumulator, currentValue) {
+	return accumulator + currentValue.amount;
 }
 
 function postCategory() {
@@ -72,6 +123,7 @@ function postCategory() {
 
 	httpRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
+	console.log(JSON.stringify(data));
 	httpRequest.send(JSON.stringify(data));
 }
 
@@ -124,20 +176,26 @@ function handleDeleteCategories(httpRequest) {
 }
 
 /*	Adds category to the categories table */
-function addCategory(id, cat, status, budget) {
+function addCategory(item, id) {
 	var tableRef = document.getElementById("categories");
 	var newRow   = tableRef.insertRow();
-	newRow.insertCell().appendChild(document.createTextNode(cat));
-	newRow.insertCell().appendChild(document.createTextNode(status + "/" + budget));
-	var a = document.createElement('a');
-	a.onclick = function() { deleteCategory(id); };
-	a.appendChild(document.createTextNode("Delete"));
-	newRow.insertCell().appendChild(a);
+	newRow.insertCell().appendChild(document.createTextNode(item.cat));
+	newRow.insertCell().appendChild(document.createTextNode(""));
+	newRow.insertCell().appendChild(document.createTextNode(item.budget));
+
+	if(id != 0) { // We don't want a delete link for uncategorized.
+		var a = document.createElement('a');
+		a.onclick = function() { deleteCategory(id); };
+		a.appendChild(document.createTextNode("Delete"));
+		newRow.insertCell().appendChild(a);
+	} else {
+		newRow.insertCell();
+	}
 
 	var selectRef = document.getElementById("addPur_category");
 	var opt = document.createElement('option');
 	opt.value = id;
-	opt.text = cat;
+	opt.text = item.cat;
 	selectRef.appendChild(opt);
 
 }
@@ -163,17 +221,16 @@ function handleGetPurchases(httpRequest) {
 
 		if (httpRequest.status === 200) {
 
-			var rows = JSON.parse(httpRequest.responseText); // Parse the response of the json object we got back
+			purchases = JSON.parse(httpRequest.responseText); // Parse the response of the json object we got back
 
 			// Delete all the rows in the table
-			var tableRef = document.getElementById("purchases");
-			while (tableRef.rows.length > 0) {
-				tableRef.deleteRow(0);
+			while (document.getElementById("purchases").rows.length > 0) {
+				document.getElementById("purchases").deleteRow(0);
 			}
 
-			for (var i = 0; i < rows.length; i++) { // add all the rows from the response
-				addPurchase(i, rows[i]["date"], rows[i]["purpose"], rows[i]["cat"], rows[i]["amount"]);
-			}
+			// Add all the purchases to the table
+			purchases.map(addPurchase);
+
 		} else {
 			alert("There was a problem with the get request.  you'll need to refresh the page to recieve updates again!");
 		}
@@ -188,7 +245,7 @@ function postPurchase() {
 		return false;
 	}
 
-	var date = document.getElementById("addPur_date").value;
+	var date = new Date(document.getElementById("addPur_date").value + ' GMT -0500');
 	var purpose = document.getElementById("addPur_purpose").value;
 	var category = document.getElementById("addPur_category").value;
 	var amount = document.getElementById("addPur_amount").value;
@@ -198,13 +255,15 @@ function postPurchase() {
 	console.log("POST Purchase Requested: /api/purchases/");
 
 	var data = {};
-	data["date"] = date;
+	console.log(date);
+	data["date"] = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 	data["purpose"] = purpose;
 	data["cat_id"] = parseInt(category);
 	data["amount"] = amount;
 
 	httpRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
+	console.log(JSON.stringify(data));
 	httpRequest.send(JSON.stringify(data));
 }
 
@@ -229,13 +288,14 @@ function handlePostPurchase(httpRequest) {
 }
 
 /*	Adds category to the categories table */
-function addPurchase(id, date, purpose, cat, amount) {
+function addPurchase(item) {
 	var tableRef = document.getElementById("purchases");
 	var newRow   = tableRef.insertRow();
-	newRow.insertCell().appendChild(document.createTextNode(date));
-	newRow.insertCell().appendChild(document.createTextNode(purpose));
-	newRow.insertCell().appendChild(document.createTextNode(cat));
-	newRow.insertCell().appendChild(document.createTextNode(amount));
+	dt = new Date(item.date);
+	newRow.insertCell().appendChild(document.createTextNode((dt.getMonth()+1) + "/" + dt.getDate() + "/" + dt.getFullYear()));
+	newRow.insertCell().appendChild(document.createTextNode(item.purpose));
+	newRow.insertCell().appendChild(document.createTextNode(item.cat));
+	newRow.insertCell().appendChild(document.createTextNode(item.amount));
 }
 
 window.addEventListener("load", setup, true);

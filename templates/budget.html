@@ -32,11 +32,18 @@
 			{% endif %}
 		{% endwith %}
 
+		<div class="row mt-4">
+			<div class="col-sm-12">
+				<h2 class="text-center">Current Month (<span id="currentMonth"></span>)</h2>
+			</div>
+		</div>
+
 		<table class="table table-striped">
 			<thead>
     		<tr>
 					<th scope="col">Category</th>
-					<th scope="col">Status</th>
+					<th scope="col">Amount Remaining</th>
+					<th scope="col">Budget</th>
 					<th scope="col">Delete?</th>
 				</tr>
 			</thead>
