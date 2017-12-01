@@ -1,6 +1,6 @@
-var purchases = [];
-var currentPurchases = [];
-var categories = [];
+var purchases = []; // All purchases
+var currentPurchases = []; // This month's purchases (filtered)
+var categories = []; // All categories
 var currentDate = new Date();
 
 function setup() {
