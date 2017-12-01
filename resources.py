@@ -78,6 +78,5 @@ class PurchaseListResource(Resource):
         parsed_args = purParser.parse_args()
         date = datetime.strptime(parsed_args['date'], "%Y-%m-%d")
         purchase = {'date':date, 'purpose':parsed_args['purpose'], 'cat':categories[parsed_args['cat_id']]['cat'], 'amount':parsed_args['amount']}
-        #categories[int(parsed_args['cat_id'])]['status'] -= float(parsed_args['amount'])
         purchases.append(purchase)
         return purchase, 201

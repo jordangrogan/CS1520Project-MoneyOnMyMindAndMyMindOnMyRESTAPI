@@ -94,7 +94,6 @@ function handleGetPurchasesByMonth(httpRequest) {
 
 function setCategoryStatus(catItem, id) {
 	var status = catItem.budget - currentPurchases.filter(purchase => purchase.cat === catItem.cat).reduce(sumPurchases, 0);
-	console.log("status:" + status);
 	document.getElementById("categories").rows[id].cells[1].innerText = "" + status;
 }
 
