@@ -16,3 +16,19 @@ Then, set FLASK_APP to budget.py:
 Then, run the app:  
 `flask run`  
 Lastly, go to [http://localhost:5000](http://localhost:5000) in your browser.
+
+### CURL Commands
+GET Categories
+`curl -i http://localhost:5000/api/cats/`
+
+POST Category
+`curl -i -H "Content-Type: application/json" -X POST -d '{"cat":"Food", "budget":100.0}' http://localhost:5000/api/cats/`
+
+GET Purchases
+`curl -i http://localhost:5000/api/purchases/`
+
+GET Purchases in Specified Month
+`curl -i http://localhost:5000/api/purchases/?month=201712`
+
+POST Purchase
+`curl -i -H "Content-Type: application/json" -X POST -d '{"date":"2017-11-28", "purpose":"Description of purchase", "cat_id":0, "amount":10.0}' http://localhost:5000/api/purchases/`
