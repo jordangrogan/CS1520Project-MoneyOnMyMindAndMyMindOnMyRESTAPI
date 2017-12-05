@@ -32,6 +32,10 @@ class CategoryResource(Resource):
     def delete(self, id):
         print("------ DELETE REQUEST ------")
         if(id != 0):
+            # Set any purchases with this category to uncategorized
+            for purchase in purchases:
+                if purchase["cat"] == categories[id]["cat"]:
+                    purchase["cat"] = "Uncategorized"
             del categories[id]
             return {}, 204 # Success, but "no content"
         else:
